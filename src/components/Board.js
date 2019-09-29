@@ -1,56 +1,57 @@
-import React from "react";
-import Square from "./Square";
+import React from 'react';
+import Square from './Square';
 
 class Board extends React.Component {
   renderSquare = i => {
-    var winSquares = this.props.winSquares
+    const { winSquares, squares, onHandleClick } = this.props;
     if (winSquares.length === 0) {
       return (
         <Square
-          style="white"
-          value={this.props.squares[i]}
-          onClick={() => this.props.onHandleClick(i)}
+          key={i}
+          styles="white"
+          value={squares[i]}
+          onClick={() => onHandleClick(i)}
         />
       );
     }
-    else {
-      var check = false;
-      winSquares.forEach(element => {
-        if (element === i) {
-          check = true;
-        }
-      })
-      if (check) {
-        return (
-          <Square
-            style="red"
-            value={this.props.squares[i]}
-            onClick={() => this.props.onHandleClick(i)}
-          />
-        );
+
+    let check = false;
+    winSquares.forEach(element => {
+      if (element === i) {
+        check = true;
       }
-      else {
-        return (
-          <Square
-            style="white"
-            value={this.props.squares[i]}
-            onClick={() => this.props.onHandleClick(i)}
-          />
-        );
-      }
-    }
+    });
+    if (check) {
+      return (
+        <Square
+        key={i}
+          styles="red"
+          value={squares[i]}
+          onClick={() => onHandleClick(i)}
+        />
+      );
+    } 
+      return (
+        <Square
+        key={i}
+          styles="white"
+          value={squares[i]}
+          onClick={() => onHandleClick(i)}
+        />
+      );
+    
   };
 
   render() {
-    console.log('winSquares', this.props.winSquares);
+    // console.log('winSquares', this.props.winSquares);
 
     let items = [];
-    let listItems = [];
-    for (let i = 0; i < 20; i++) {
-      for (let j = 20 * i; j < 20 * (i + 1); j++) {
+    const listItems = [];
+    for (let i = 0; i < 20; i+=1) {
+      for (let j = 20 * i; j < 20 * (i + 1); j+=1) {
         items.push(this.renderSquare(j));
       }
-      listItems.push(<div className="board-row">{items}</div>);
+      listItems.push(<div key={i} className="board-row">{items}</div>);
       items = [];
     }
 

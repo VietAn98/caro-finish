@@ -1,10 +1,11 @@
 import React from "react";
 
-class Square extends React.Component {
+class Square extends React.PureComponent {
     render() {
+      const {styles, onClick, value} = this.props;
       return (
-        <button style={{background: this.props.style}} className="square" onClick={this.props.onClick}>
-          {this.props.value}
+        <button type = "button" style={{background: styles}} className="square" onClick={onClick}>
+          {value}
         </button>
       );
     }
