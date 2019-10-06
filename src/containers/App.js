@@ -1,29 +1,16 @@
 import React from "react";
 import Swal from "sweetalert2";
+import { connect } from 'react-redux'
 import "./App.css";
 import Board from "../components/Board";
+import { saveHistory, checkAsWin, checkIfLastStep, checkIfNotLastStep,
+  resetSquares, ascendingSort, decreasingSort } from "../actions/appAction";
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      history: [{
-        squares: Array(400).fill(null)
-      }],
-      isNext: true,
-      win: false,
-      stepNumber: 0,
-      checkWin: false,
-      winSquares: [],
-      winSquaresTemp: [],
-      isUp: true,
-      isDown: false,
-    };
-  }
-
   onHandleClick = i => {
-    let {history} = this.state;
-    const {stepNumber, checkWin, isNext} = this.state;
+    const {state, saveHistories, checkAsWinning} = this.props;
+    let {history} = state;
+    const {stepNumber, checkWin, isNext} = state;
     history = history.slice(0, stepNumber + 1);
     const current = history[history.length - 1];
     const squares = current.squares.slice();
@@ -34,13 +21,7 @@ class App extends React.Component {
 
     if (squares[i] === null) {
       squares[i] = isNext ? "X" : "O";
-      this.setState({
-        history: history.concat([{
-          squares,
-        }]),
-        stepNumber: history.length,
-        isNext: !isNext
-      });
+      saveHistories(history, squares, isNext);
       switch (squares[i]) {
         default:
           break;
@@ -60,12 +41,7 @@ class App extends React.Component {
             });
 
             winSquares.push(i + 1, i + 2, i, i + 3, i + 4);
-            this.setState({
-              winSquares,
-              checkWin: true,
-              winSquaresTemp: winSquares,
-              win: true
-            });
+            checkAsWinning(winSquares);
           }
           if (
             squares[i + 1] === "X" &&
@@ -82,12 +58,7 @@ class App extends React.Component {
             });
 
             winSquares.push(i + 1, i + 2, i, i + 3, i - 1);
-            this.setState({
-              winSquares,
-              checkWin: true,
-              winSquaresTemp: winSquares,
-              win: true
-            });
+            checkAsWinning(winSquares);
           }
           if (
             squares[i + 1] === "X" &&
@@ -109,12 +80,7 @@ class App extends React.Component {
             });
 
             winSquares.push(i + 1, i + 2, i, i - 2, i - 1);
-            this.setState({
-              winSquares,
-              checkWin: true,
-              winSquaresTemp: winSquares,
-              win: true
-            });
+            checkAsWinning(winSquares);
           }
           if (
             squares[i - 1] === "X" &&
@@ -136,12 +102,7 @@ class App extends React.Component {
             });
 
             winSquares.push(i - 1, i - 2, i, i - 3, i + 1);
-            this.setState({
-              winSquares,
-              checkWin: true,
-              winSquaresTemp: winSquares,
-              win: true
-            });
+            checkAsWinning(winSquares);
           }
           if (
             squares[i - 1] === "X" &&
@@ -163,12 +124,7 @@ class App extends React.Component {
             });
 
             winSquares.push(i - 1, i - 2, i, i - 3, i - 4);
-            this.setState({
-              winSquares,
-              checkWin: true,
-              winSquaresTemp: winSquares,
-              win: true
-            });
+            checkAsWinning(winSquares);
           }
 
           // hang doc
@@ -192,12 +148,7 @@ class App extends React.Component {
             });
 
             winSquares.push(i + 20, i + 40, i, i + 60, i + 80);
-            this.setState({
-              winSquares,
-              checkWin: true,
-              winSquaresTemp: winSquares,
-              win: true
-            });
+            checkAsWinning(winSquares);
           }
           if (
             squares[i + 1 * 20] === "X" &&
@@ -219,12 +170,7 @@ class App extends React.Component {
             });
 
             winSquares.push(i + 20, i + 40, i, i + 60, i - 20);
-            this.setState({
-              winSquares,
-              checkWin: true,
-              winSquaresTemp: winSquares,
-              win: true
-            });
+            checkAsWinning(winSquares);
           }
           if (
             squares[i + 1 * 20] === "X" &&
@@ -246,12 +192,7 @@ class App extends React.Component {
             });
 
             winSquares.push(i - 20, i - 40, i, i + 20, i + 40);
-            this.setState({
-              winSquares,
-              checkWin: true,
-              winSquaresTemp: winSquares,
-              win: true
-            });
+            checkAsWinning(winSquares);
           }
           if (
             squares[i - 1 * 20] === "X" &&
@@ -268,12 +209,7 @@ class App extends React.Component {
             });
 
             winSquares.push(i - 20, i - 40, i, i - 60, i + 20);
-            this.setState({
-              winSquares,
-              checkWin: true,
-              winSquaresTemp: winSquares,
-              win: true
-            });
+            checkAsWinning(winSquares);
           }
           if (
             squares[i - 20] === "X" &&
@@ -290,12 +226,7 @@ class App extends React.Component {
             });
 
             winSquares.push(i - 20, i - 40, i, i - 60, i - 80);
-            this.setState({
-              winSquares,
-              checkWin: true,
-              winSquaresTemp: winSquares,
-              win: true
-            });
+            checkAsWinning(winSquares);
           }
 
           // cheo phai
@@ -314,12 +245,7 @@ class App extends React.Component {
             });
 
             winSquares.push(i + 1 * 19, i + 2 * 19, i, i + 3 * 19, i + 4 * 19);
-            this.setState({
-              winSquares,
-              checkWin: true,
-              winSquaresTemp: winSquares,
-              win: true
-            });
+            checkAsWinning(winSquares);
           }
           if (
             squares[i + 1 * 19] === "X" &&
@@ -341,12 +267,7 @@ class App extends React.Component {
             });
 
             winSquares.push(i + 1 * 19, i + 2 * 19, i, i + 3 * 19, i - 1 * 19);
-            this.setState({
-              winSquares,
-              checkWin: true,
-              winSquaresTemp: winSquares,
-              win: true
-            });
+            checkAsWinning(winSquares);
           }
           if (
             squares[i + 1 * 19] === "X" &&
@@ -368,12 +289,7 @@ class App extends React.Component {
             });
 
             winSquares.push(i - 1 * 19, i - 2 * 19, i, i + 1 * 19, i + 2 * 19);
-            this.setState({
-              winSquares,
-              checkWin: true,
-              winSquaresTemp: winSquares,
-              win: true
-            });
+            checkAsWinning(winSquares);
           }
           if (
             squares[i - 1 * 19] === "X" &&
@@ -395,12 +311,7 @@ class App extends React.Component {
             });
 
             winSquares.push(i - 1 * 19, i - 2 * 19, i, i - 3 * 19, i + 1 * 19);
-            this.setState({
-              winSquares,
-              checkWin: true,
-              winSquaresTemp: winSquares,
-              win: true
-            });
+            checkAsWinning(winSquares);
           }
           if (
             squares[i - 1 * 19] === "X" &&
@@ -422,12 +333,7 @@ class App extends React.Component {
             });
 
             winSquares.push(i - 1 * 19, i - 2 * 19, i, i - 3 * 19, i - 4 * 19);
-            this.setState({
-              winSquares,
-              checkWin: true,
-              winSquaresTemp: winSquares,
-              win: true
-            });
+            checkAsWinning(winSquares);
           }
 
           // cheo trai
@@ -451,12 +357,7 @@ class App extends React.Component {
             });
 
             winSquares.push(i + 1 * 21, i + 2 * 21, i, i + 3 * 21, i + 4 * 21);
-            this.setState({
-              winSquares,
-              checkWin: true,
-              winSquaresTemp: winSquares,
-              win: true
-            });
+            checkAsWinning(winSquares);
           }
           if (
             squares[i + 1 * 21] === "X" &&
@@ -478,12 +379,7 @@ class App extends React.Component {
             });
 
             winSquares.push(i + 1 * 21, i + 2 * 21, i, i + 3 * 21, i - 1 * 21);
-            this.setState({
-              winSquares,
-              checkWin: true,
-              winSquaresTemp: winSquares,
-              win: true
-            });
+            checkAsWinning(winSquares);
           }
           if (
             squares[i + 1 * 21] === "X" &&
@@ -505,12 +401,7 @@ class App extends React.Component {
             });
 
             winSquares.push(i + 1 * 21, i + 2 * 21, i, i - 1 * 21, i - 1 * 21);
-            this.setState({
-              winSquares,
-              checkWin: true,
-              winSquaresTemp: winSquares,
-              win: true
-            });
+            checkAsWinning(winSquares);
           }
           if (
             squares[i - 1 * 21] === "X" &&
@@ -532,12 +423,7 @@ class App extends React.Component {
             });
 
             winSquares.push(i - 1 * 21, i - 2 * 21, i, i - 2 * 21, i + 1 * 21);
-            this.setState({
-              winSquares,
-              checkWin: true,
-              winSquaresTemp: winSquares,
-              win: true
-            });
+            checkAsWinning(winSquares);
           }
           if (
             squares[i - 1 * 21] === "X" &&
@@ -559,12 +445,7 @@ class App extends React.Component {
             });
 
             winSquares.push(i - 1 * 21, i - 2 * 21, i, i - 3 * 21, i - 4 * 21);
-            this.setState({
-              winSquares,
-              checkWin: true,
-              winSquaresTemp: winSquares,
-              win: true
-            });
+            checkAsWinning(winSquares);
           }
           break;
         case "O":
@@ -588,12 +469,7 @@ class App extends React.Component {
             });
 
             winSquares.push(i + 1, i + 2, i, i + 3, i + 4);
-            this.setState({
-              winSquares,
-              checkWin: true,
-              winSquaresTemp: winSquares,
-              win: true
-            });
+            checkAsWinning(winSquares);
           }
           if (
             squares[i + 1] === "O" &&
@@ -615,12 +491,7 @@ class App extends React.Component {
             });
 
             winSquares.push(i + 1, i + 2, i, i + 3, i - 1);
-            this.setState({
-              winSquares,
-              checkWin: true,
-              winSquaresTemp: winSquares,
-              win: true
-            });
+            checkAsWinning(winSquares);
           }
           if (
             squares[i + 1] === "O" &&
@@ -642,12 +513,7 @@ class App extends React.Component {
             });
 
             winSquares.push(i + 1, i + 2, i, i - 1, i - 2);
-            this.setState({
-              winSquares,
-              checkWin: true,
-              winSquaresTemp: winSquares,
-              win: true
-            });
+            checkAsWinning(winSquares);
           }
           if (
             squares[i - 1] === "O" &&
@@ -669,12 +535,7 @@ class App extends React.Component {
             });
 
             winSquares.push(i + 1, i - 2, i, i - 3, i - 1);
-            this.setState({
-              winSquares,
-              checkWin: true,
-              winSquaresTemp: winSquares,
-              win: true
-            });
+            checkAsWinning(winSquares);
           }
           if (
             squares[i - 1] === "O" &&
@@ -696,12 +557,7 @@ class App extends React.Component {
             });
 
             winSquares.push(i - 1, i - 2, i, i - 3, i - 4);
-            this.setState({
-              winSquares,
-              checkWin: true,
-              winSquaresTemp: winSquares,
-              win: true
-            });
+            checkAsWinning(winSquares);
           }
 
           // hang doc
@@ -725,12 +581,7 @@ class App extends React.Component {
             });
 
             winSquares.push(i + 20, i + 40, i, i + 60, i + 80);
-            this.setState({
-              winSquares,
-              checkWin: true,
-              winSquaresTemp: winSquares,
-              win: true
-            });
+            checkAsWinning(winSquares);
           }
           if (
             squares[i + 1 * 20] === "O" &&
@@ -752,12 +603,7 @@ class App extends React.Component {
             });
 
             winSquares.push(i + 20, i + 40, i, i + 60, i - 20);
-            this.setState({
-              winSquares,
-              checkWin: true,
-              winSquaresTemp: winSquares,
-              win: true
-            });
+            checkAsWinning(winSquares);
           }
           if (
             squares[i + 1 * 20] === "O" &&
@@ -779,12 +625,7 @@ class App extends React.Component {
             });
 
             winSquares.push(i + 20, i + 40, i, i - 20, i - 40);
-            this.setState({
-              winSquares,
-              checkWin: true,
-              winSquaresTemp: winSquares,
-              win: true
-            });
+            checkAsWinning(winSquares);
           }
           if (
             squares[i - 1 * 20] === "O" &&
@@ -806,12 +647,7 @@ class App extends React.Component {
             });
 
             winSquares.push(i + 20, i - 20, i, i - 40, i - 60);
-            this.setState({
-              winSquares,
-              checkWin: true,
-              winSquaresTemp: winSquares,
-              win: true
-            });
+            checkAsWinning(winSquares);
           }
           if (
             squares[i - 20] === "O" &&
@@ -833,12 +669,7 @@ class App extends React.Component {
             });
 
             winSquares.push(i - 20, i - 40, i, i - 60, i - 80);
-            this.setState({
-              winSquares,
-              checkWin: true,
-              winSquaresTemp: winSquares,
-              win: true
-            });
+            checkAsWinning(winSquares);
           }
 
           // cheo phai
@@ -862,12 +693,7 @@ class App extends React.Component {
             });
 
             winSquares.push(i + 19, i + 2 * 19, i, i + 3 * 19, i + 4 * 19);
-            this.setState({
-              winSquares,
-              checkWin: true,
-              winSquaresTemp: winSquares,
-              win: true
-            });
+            checkAsWinning(winSquares);
           }
           if (
             squares[i + 1 * 19] === "O" &&
@@ -889,12 +715,7 @@ class App extends React.Component {
             });
 
             winSquares.push(i + 19, i + 2 * 19, i, i + 3 * 19, i - 1 * 19);
-            this.setState({
-              winSquares,
-              checkWin: true,
-              winSquaresTemp: winSquares,
-              win: true
-            });
+            checkAsWinning(winSquares);
           }
           if (
             squares[i + 1 * 19] === "O" &&
@@ -916,12 +737,7 @@ class App extends React.Component {
             });
 
             winSquares.push(i + 19, i + 2 * 19, i, i - 1 * 19, i - 2 * 19);
-            this.setState({
-              winSquares,
-              checkWin: true,
-              winSquaresTemp: winSquares,
-              win: true
-            });
+            checkAsWinning(winSquares);
           }
           if (
             squares[i - 1 * 19] === "O" &&
@@ -943,12 +759,7 @@ class App extends React.Component {
             });
 
             winSquares.push(i + 19, i - 1 * 19, i, i - 2 * 19, i - 3 * 19);
-            this.setState({
-              winSquares,
-              checkWin: true,
-              winSquaresTemp: winSquares,
-              win: true
-            });
+            checkAsWinning(winSquares);
           }
           if (
             squares[i - 1 * 19] === "O" &&
@@ -970,12 +781,7 @@ class App extends React.Component {
             });
 
             winSquares.push(i - 19, i - 2 * 19, i, i - 3 * 19, i - 4 * 19);
-            this.setState({
-              winSquares,
-              checkWin: true,
-              winSquaresTemp: winSquares,
-              win: true
-            });
+            checkAsWinning(winSquares);
           }
 
           // cheo trai
@@ -999,12 +805,7 @@ class App extends React.Component {
             });
 
             winSquares.push(i + 1 * 21, i + 2 * 21, i, i + 3 * 21, i + 4 * 21);
-            this.setState({
-              winSquares,
-              checkWin: true,
-              winSquaresTemp: winSquares,
-              win: true
-            });
+            checkAsWinning(winSquares);
           }
           if (
             squares[i + 1 * 21] === "O" &&
@@ -1026,12 +827,7 @@ class App extends React.Component {
             });
 
             winSquares.push(i + 1 * 21, i + 2 * 21, i, i + 3 * 21, i - 1 * 21);
-            this.setState({
-              winSquares,
-              checkWin: true,
-              winSquaresTemp: winSquares,
-              win: true
-            });
+            checkAsWinning(winSquares);
           }
           if (
             squares[i + 1 * 21] === "O" &&
@@ -1053,12 +849,7 @@ class App extends React.Component {
             });
 
             winSquares.push(i + 1 * 21, i + 2 * 21, i, i - 1 * 21, i - 2 * 21);
-            this.setState({
-              winSquares,
-              checkWin: true,
-              winSquaresTemp: winSquares,
-              win: true
-            });
+            checkAsWinning(winSquares);
           }
           if (
             squares[i - 1 * 21] === "O" &&
@@ -1080,12 +871,7 @@ class App extends React.Component {
             });
 
             winSquares.push(i + 1 * 21, i - 2 * 21, i, i - 3 * 21, i - 1 * 21);
-            this.setState({
-              winSquares,
-              checkWin: true,
-              winSquaresTemp: winSquares,
-              win: true
-            });
+            checkAsWinning(winSquares);
           }
           if (
             squares[i - 1 * 21] === "O" &&
@@ -1107,12 +893,7 @@ class App extends React.Component {
             });
 
             winSquares.push(i - 4 * 21, i - 2 * 21, i, i - 3 * 21, i - 1 * 21);
-            this.setState({
-              winSquares,
-              checkWin: true,
-              winSquaresTemp: winSquares,
-              win: true
-            });
+            checkAsWinning(winSquares);
           }
           break;
       }
@@ -1121,41 +902,20 @@ class App extends React.Component {
   };
 
   jumpTo(step) {
-    
-    const {history, win, winSquaresTemp} = this.state;
+    const {state, checkIfLastSteps, checkIfNotLastSteps} = this.props;
+    const {history, win, winSquaresTemp} = state;
     const endPoint = history.length - 1
     if (win === true && step === endPoint) {
-      this.setState({
-        stepNumber: step,
-        isNext: (step % 2) === 0,
-        winSquares: winSquaresTemp,
-        checkWin: true
-      });
+      checkIfLastSteps(step, winSquaresTemp);
     }
     else {
-      this.setState({
-        stepNumber: step,
-        isNext: (step % 2) === 0,
-        winSquares: [],
-        checkWin: false
-      });
+      checkIfNotLastSteps(step);
     }
   }
 
   Reset() {
-    this.setState({
-      history: [{
-        squares: Array(400).fill(null)
-      }],
-      isNext: true,
-      stepNumber: 0,
-      winSquares: [],
-      checkWin: false,
-      winSquaresTemp: [],
-      win: false,
-      isUp: true,
-      isDown: false,
-    })
+    const {resetSquaress} = this.props;
+    resetSquaress();
   }
 
   sort(list) {
@@ -1183,37 +943,34 @@ class App extends React.Component {
   }
 
   ascending(moves) {
-    const {isDown} = this.state;
+    const {state, ascendSort} = this.props;
+    const {isDown} = state;
     if (isDown) {
       this.sort(moves)
-      this.setState({
-        isUp: true,
-        isDown: false
-      })
+      ascendSort();
     }
     return null;
   }
 
   decrease(moves) {
-    const {isUp} = this.state;
+    const {state, decreaseSort} = this.props;
+    const {isUp} = state;
     if (isUp) {
       this.sort(moves)
-      this.setState({
-        isDown: true,
-        isUp: false
-      })
+      decreaseSort();
     }
     return null;
   }
 
   render() {
-    const {history, stepNumber, isNext, isDown, winSquares} = this.state;
+    const {state} = this.props;
+    const {history, stepNumber, isNext, isDown, winSquares} = state;
     const current = history[stepNumber];
-    const status = `Next player: ${isNext ? "X" : "O"}`;
+    const status = ` Người chơi: ${isNext ? "X" : "O"}`;
     let moves = history.map((step, move) => {
       const desc = move ?
-        `Go to move #${move}` :
-        'Go to game start';
+        `Bước thứ #${move}` :
+        'Bước đầu tiên';
       const key = move;
       return (
         <li key={key}>
@@ -1242,7 +999,7 @@ class App extends React.Component {
         <div className="game-info">
           <div>{status}</div>
           <br />
-          <div><button onClick={() => this.Reset()} type="button" className="restart btn btn-outline-danger">Restart</button></div>
+          <div><button onClick={() => this.Reset()} type="button" className="restart btn btn-outline-danger">Chơi lại</button></div>
           <br />
           <div>
             <button type="button" className="btn btn-outline-secondary" onClick={() => this.ascending(moves)} >Tăng</button>  &emsp;
@@ -1256,4 +1013,18 @@ class App extends React.Component {
   }
 }
 
-export default App;
+const mapStateToProps = state => ({
+  state: state.appReducer
+});
+
+const mapDispatchToProps = dispatch => ({
+  saveHistories: (history, squares, isNext) => dispatch(saveHistory(history, squares, isNext)),
+  checkAsWinning: (winSquares) => dispatch(checkAsWin(winSquares)),
+  checkIfLastSteps: (step, winSquaresTemp) => dispatch(checkIfLastStep(step, winSquaresTemp)),
+  checkIfNotLastSteps: (step) => dispatch(checkIfNotLastStep(step)),
+  resetSquaress: () => dispatch(resetSquares()),
+  ascendSort: () => dispatch(ascendingSort()),
+  decreaseSort: () => dispatch(decreasingSort())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
