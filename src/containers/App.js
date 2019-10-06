@@ -1,7 +1,7 @@
 import React from "react";
 import Swal from "sweetalert2";
 import "./App.css";
-import Board from "./components/Board";
+import Board from "../components/Board";
 
 class App extends React.Component {
   constructor(props) {
