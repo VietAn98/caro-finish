@@ -88,4 +88,21 @@ ol, ul {
   width: 100px;
 }
 
+li {
+  margin: 10px;
+}
 
+.container{
+  margin: auto;
+  width: 80%;
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.listDisplay{
+  width: 20%;
+}
+
+.actionDisplay{
+  width: 75%;
+}
