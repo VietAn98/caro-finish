@@ -1,14 +1,31 @@
 import React from 'react';
 import { Form, Icon, Input, Button, Checkbox } from 'antd';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import Swal from 'sweetalert2';
+import 'antd/dist/antd.css';
 import '../index.css';
+import { fetchLogin } from '../../actions';
 
 class SignIn extends React.PureComponent {
   handleSubmit = e => {
-    const { form } = this.props;
+    const { form, fetchedLogin, history } = this.props;
     e.preventDefault();
     form.validateFields((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
+        Promise.resolve(fetchedLogin(values.username, values.password)).then(
+          () => {
+            history.push('/');
+          }
+        )
+        .catch(() => {
+          Swal.fire({
+            title: 'Thất Bại!',
+            text:
+              'Mật khẩu/Username không đúng, xin hãy kiểm tra lại',
+            type: 'error',
+          })
+        })
       }
     });
   };
@@ -69,4 +86,11 @@ class SignIn extends React.PureComponent {
     );
   }
 }
-export default Form.create()(SignIn);
+const mapDispatchToProps = dispatch => ({
+  fetchedLogin: (username, password) => dispatch(fetchLogin(username, password))
+});
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(Form.create()(withRouter(SignIn)));

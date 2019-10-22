@@ -11,7 +11,9 @@ const initialState = {
   winSquares: [],
   winSquaresTemp: [],
   isUp: true,
-  isDown: false
+  isDown: false,
+  currentUser: {},
+  status: 0
 };
 
 const appReducer = (state = initialState, action) => {
@@ -86,6 +88,21 @@ const appReducer = (state = initialState, action) => {
         isDown: true,
         isUp: false
       };
+
+    case 'USER_LOGIN':
+      return {
+        ...state,
+        currentUser: action.user
+      };
+
+    case 'LOGOUT_USER':
+      return { ...state, currentUser: {} };
+
+    case 'USER_REGISTER':
+        return {
+          ...state,
+          status: action.status
+        };
     default:
       return state;
   }
