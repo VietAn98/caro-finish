@@ -47,28 +47,28 @@ class Register extends React.PureComponent {
     const { form } = this.props;
     const { getFieldDecorator } = form;
     return (
-      <div style={{ paddingTop: '50px' }}>
-        <h3 style={{ textAlign: 'center' }}>CREATE ACCOUNT</h3>
+      <div style={{ paddingTop: '30px', paddingBottom: "50px" }}>
+        <h3 style={{ textAlign: 'center' }}>TẠO TÀI KHOẢN</h3>
         <div className="create-acc-container">
           <Form onSubmit={this.handleSubmit} className="register-form">
             <Form.Item>
               {getFieldDecorator('username', {
                 rules: [
-                  { required: true, message: 'Please input your username!' }
+                  { required: true, message: 'Không được để trống Tên đăng nhập!' }
                 ]
               })(
                 <Input
                   prefix={
                     <Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />
                   }
-                  placeholder="Username"
+                  placeholder="Tên đăng nhập"
                 />
               )}
             </Form.Item>
             <Form.Item>
               {getFieldDecorator('password', {
                 rules: [
-                  { required: true, message: 'Please input your Password!' }
+                  { required: true, message: 'Không được để trống Mật khẩu!' }
                 ]
               })(
                 <Input
@@ -76,7 +76,7 @@ class Register extends React.PureComponent {
                     <Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />
                   }
                   type="password"
-                  placeholder="Password"
+                  placeholder="Mật khẩu"
                 />
               )}
             </Form.Item>
@@ -86,7 +86,7 @@ class Register extends React.PureComponent {
                 htmlType="submit"
                 className="login-form-button"
               >
-                Create
+                Tạo
               </Button>
             </Form.Item>
           </Form>

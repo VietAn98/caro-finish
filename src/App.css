@@ -95,15 +95,17 @@ li {
 .container{
   margin: auto;
   margin-bottom: 10px;
-  padding: 10px;
+  padding-bottom: 40px;
+  padding-top: 20px;
   width: 80%;
   display: flex;
   flex-wrap: nowrap;
-  box-shadow: 12px 11px 56px -14px rgba(0,0,0,0.75);
+  box-shadow: 12px 11px 56px -14px rgba(170, 170, 170, 0.75);
 }
 
 .listDisplay{
   width: 20%;
+  border-right: 1px solid #ecc4ff;
 }
 
 .actionDisplay{
