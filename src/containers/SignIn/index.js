@@ -5,16 +5,17 @@ import { connect } from 'react-redux';
 import Swal from 'sweetalert2';
 import 'antd/dist/antd.css';
 import '../index.css';
-import { fetchLogin } from '../../actions';
+import { fetchLogin, resetSquares } from '../../actions';
 
 class SignIn extends React.PureComponent {
   handleSubmit = e => {
-    const { form, fetchedLogin, history } = this.props;
+    const { form, fetchedLogin, history, resetSquaress } = this.props;
     e.preventDefault();
     form.validateFields((err, values) => {
       if (!err) {
         Promise.resolve(fetchedLogin(values.username, values.password)).then(
           () => {
+            resetSquaress();
             history.push('/');
           }
         )
@@ -87,7 +88,8 @@ class SignIn extends React.PureComponent {
   }
 }
 const mapDispatchToProps = dispatch => ({
-  fetchedLogin: (username, password) => dispatch(fetchLogin(username, password))
+  fetchedLogin: (username, password) => dispatch(fetchLogin(username, password)),
+  resetSquaress: () => dispatch(resetSquares()),
 });
 
 export default connect(

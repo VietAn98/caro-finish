@@ -6,7 +6,7 @@ import 'antd/dist/antd.css';
 import App from './App';
 import SignIn from './containers/SignIn';
 import Register from './containers/Register';
-import { logoutUser, fetchProfile } from './actions';
+import { logoutUser, fetchProfile, resetSquares } from './actions';
 
 const jwt = require('jsonwebtoken');
 
@@ -16,12 +16,13 @@ class Game extends React.PureComponent {
   //   fetchedProfile();
   // };
 
-  handleClick = (e) => {
-    e.preventDefault()
-    localStorage.removeItem("token")
-    const {userLogout} = this.props;
-    userLogout()
-  }
+  handleClick = e => {
+    e.preventDefault();
+    localStorage.removeItem('token');
+    const { userLogout, resetSquaress } = this.props;
+    userLogout();
+    resetSquaress();
+  };
 
   render() {
     const tokenn = localStorage.token;
@@ -33,14 +34,18 @@ class Game extends React.PureComponent {
           <div className="container">
             <div className="listDisplay">
               <ul style={{ listStyleType: 'none', fontSize: '20px' }}>
-                <li><Icon type="user" /> {decodeToken.username}</li>
+                <li>
+                  <Icon type="user" /> {decodeToken.username}
+                </li>
                 <li>
                   <Link to="/">
                     <Icon type="home" /> Trang chủ
                   </Link>
                 </li>
                 <li>
-                  <Button type="dashed" onClick={this.handleClick}>Đăng xuất</Button>
+                  <Button type="dashed" onClick={this.handleClick}>
+                    Đăng xuất
+                  </Button>
                 </li>
               </ul>
             </div>
@@ -114,7 +119,8 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = dispatch => ({
   fetchedProfile: () => dispatch(fetchProfile()),
-  userLogout: () => dispatch(logoutUser())
+  userLogout: () => dispatch(logoutUser()),
+  resetSquaress: () => dispatch(resetSquares())
 });
 export default connect(
   mapStateToProps,

@@ -101,7 +101,7 @@ const appReducer = (state = initialState, action) => {
     case 'USER_REGISTER':
         return {
           ...state,
-          status: action.status
+          status: action.status,
         };
     default:
       return state;
